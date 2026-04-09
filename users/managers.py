@@ -15,7 +15,4 @@ class CustomUserManager(BaseUserManager):
         extra_fields.setdefault('is_staff', True)
         extra_fields.setdefault('is_superuser', True)
 
-        if not extra_fields.get('phone_number'):
-            raise ValueError("Суперпользователь должен иметь phone_number")
-
         return self.create_user(email, password, **extra_fields)

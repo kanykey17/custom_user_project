@@ -1,24 +1,11 @@
-from rest_framework import serializers
-from .models import CustomUser
-from django.contrib.auth import authenticate
+from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 
-class RegisterSerializer(serializers.ModelSerializer):
-    password = serializers.CharField(write_only=True)
+class CustomTokenSerializer(TokenObtainPairSerializer):
+    @classmethod
+    def get_token(cls, user):
+        token = super().get_token(user)
 
-    class Meta:
-        model = CustomUser
-        fields = ['email', 'password', 'phone_number']
+        token['email'] = user.email
+        token['birthdate'] = str(user.birthdate) if user.birthdate else None
 
-    def create(self, validated_data):
-        return CustomUser.objects.create_user(**validated_data)
-
-
-class LoginSerializer(serializers.Serializer):
-    email = serializers.EmailField()
-    password = serializers.CharField()
-
-    def validate(self, data):
-        user = authenticate(email=data['email'], password=data['password'])
-        if not user:
-            raise serializers.ValidationError("Неверные данные")
-        return data
+        return token

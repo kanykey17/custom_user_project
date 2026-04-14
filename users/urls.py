@@ -1,7 +1,7 @@
 from django.urls import path
-from .views import RegisterView, LoginView
+from .views import google_login, google_callback
 
 urlpatterns = [
-    path('register/', RegisterView.as_view()),
-    path('login/', LoginView.as_view()),
+    path('google/login/', google_login),
+    path('google/callback/', google_callback),
 ]

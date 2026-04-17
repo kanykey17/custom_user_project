@@ -122,6 +122,9 @@ STATIC_URL = 'static/'
 
 AUTH_USER_MODEL = 'users.CustomUser'
 
+REDIS_HOST = 'localhost'
+REDIS_PORT = 6379
+
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': (
         'rest_framework_simplejwt.authentication.JWTAuthentication',

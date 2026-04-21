@@ -41,6 +41,7 @@ INSTALLED_APPS = [
     'drf_yasg',
     'users',
     'products',
+    'common',
 ]
 
 MIDDLEWARE = [
@@ -122,6 +123,8 @@ STATIC_URL = 'static/'
 
 AUTH_USER_MODEL = 'users.CustomUser'
 
+EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+
 REDIS_HOST = 'localhost'
 REDIS_PORT = 6379
 
@@ -129,4 +132,17 @@ REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': (
         'rest_framework_simplejwt.authentication.JWTAuthentication',
     ),
+}
+CELERY_BROKER_URL = 'redis://localhost:6379/0'
+CELERY_ACCEPT_CONTENT = ['json']
+CELERY_TASK_SERIALIZER = 'json'
+CELEPY_IMPORTS = ('common.tasks')
+
+from celery.schedules import crontab
+
+CELERY_BEAT_SCHEDULE = {
+    'delete-products-every-night': {
+        'task': 'common.tasks.delete_old_products',
+        'schedule': crontab(hour=0, minute=0),
+    },
 }
